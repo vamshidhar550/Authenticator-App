@@ -34,6 +34,8 @@ public class MainActivity<Register> extends AppCompatActivity {
         mEmail    = findViewById(R.id.email);
         mPassword = findViewById(R.id.password);
         mPhone    = findViewById(R.id.phone);
+        mRegisterBtn = findViewById(R.id.Register);
+
 
         fAuth = FirebaseAuth.getInstance();
         progressBar = findViewById(R.id.progressBar);
@@ -42,41 +44,38 @@ public class MainActivity<Register> extends AppCompatActivity {
             finish();
         }
 
-        mRegisterBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String email = mEmail.getText().toString().trim();
-                String password = mPassword.getText().toString().trim();
+        mRegisterBtn.setOnClickListener(v -> {
+            String email = mEmail.getText().toString().trim();
+            String password = mPassword.getText().toString().trim();
 
-                if (TextUtils.isEmpty(email)){
-                    mEmail.setError("Email is Required");
-                    return;
-                }
-                if (TextUtils.isEmpty(password)){
-                    mPassword.setError("Passwoed is Empty");
-                    return;
-                }
-                if (password.length()<6){
-                    mPassword.setError("Password must be >= 6 characters");
-                    return;
-                }
-
-                progressBar.setVisibility(View.VISIBLE);
-
-
-                fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(MainActivity.this, "User Created", Toast.LENGTH_SHORT).show();
-                            startActivity(new Intent(getApplicationContext(),MainActivity.class));
-                        }else {
-                            Toast.makeText(MainActivity.this, "Error is occured" +task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+            if (TextUtils.isEmpty(email)){
+                mEmail.setError("Email is Required");
+                return;
             }
+            if (TextUtils.isEmpty(password)){
+                mPassword.setError("Passwoed is Empty");
+                return;
+            }
+            if (password.length()<6){
+                mPassword.setError("Password must be >= 6 characters");
+                return;
+            }
+
+            progressBar.setVisibility(View.VISIBLE);
+
+
+            fAuth.createUserWithEmailAndPassword(email,password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+
+                @Override
+                public void onComplete(@NonNull Task<AuthResult> task) {
+                    if (task.isSuccessful()){
+                        Toast.makeText(MainActivity.this, "User Created", Toast.LENGTH_SHORT).show();
+                        startActivity(new Intent(getApplicationContext(),MainActivity.class));
+                    }else {
+                        Toast.makeText(MainActivity.this, "Error is occured" +task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         });
     }
 
